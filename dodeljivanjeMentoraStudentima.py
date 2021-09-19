@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 import numpy as np
 import random
 import copy
 
-
-# In[2]:
 
 
 class Individual:
@@ -54,7 +50,7 @@ class Individual:
         return self.fitness < other.fitness
 
 
-# In[3]:
+
 
 
 def mutation(individual, mutation_rate):
@@ -68,7 +64,6 @@ def mutation(individual, mutation_rate):
     
 
 
-# In[4]:
 
 
 def selection(population, tournament_size):
@@ -81,8 +76,6 @@ def selection(population, tournament_size):
             bestInd = i
     return bestInd
 
-
-# In[5]:
 
 
 def crossover(parent1, parent2, child1, child2):
@@ -145,19 +138,21 @@ def crossover(parent1, parent2, child1, child2):
         child2 = parent2
 
 
-# In[6]:
 
 
-mentoriZauzetost = [random.randint(3,8) for i in range(10)]
-zeljeStudenata = [[int(i) for i in range(10)] for j in range(50)]
+def generisiPrimer(brMentora, brStudenata):
+    mentoriZauzetost = [random.randint(int(brStudenata/brMentora)-int(brStudenata/(brMentora*4)),int(brStudenata/brMentora)+2*int(brStudenata/(brMentora*4))) for i in range(brMentora)]
+    zeljeStudenata = [[int(i) for i in range(brMentora)] for j in range(brStudenata)]
 
-for i in range(len(zeljeStudenata)):
-    random.shuffle(zeljeStudenata[i])
+    for i in range(len(zeljeStudenata)):
+        random.shuffle(zeljeStudenata[i])
     
-print(len(zeljeStudenata), len(zeljeStudenata[0]))
+    return mentoriZauzetost, zeljeStudenata
+    
 
 
-# In[7]:
+mentoriZauzetost, zeljeStudenata = generisiPrimer(15, 60)
+
 
 
 population_size = 100
@@ -167,8 +162,6 @@ max_iter = 1000
 elitism_size = 20
 population = [Individual(mentoriZauzetost, zeljeStudenata) for _ in range(population_size)]
 new_population = [Individual(mentoriZauzetost, zeljeStudenata) for _ in range(population_size)]
-# for i in range(population_size):
-#     print(population[i].code)
 
 for iteration in range(max_iter):
     population.sort()
@@ -195,110 +188,24 @@ for iteration in range(max_iter):
 
 population.sort()
 
-print("najbolje resenje je:")
-print(population[0].code)
-print(population[0].fitness)
-    
 
 
-# In[8]:
 
-
-population[0].code.sort()
-
-
-# In[9]:
-
-
+brPrvihZelja = 0
+najgoraZelja = 0
+ispunjeneZelje = {}
 for i in range(len(population[0].code)):
-    print(population[0].code[i], " fitness je = ", population[0].geneFitness(i))
+    print("{}. studentu je dodeljen {}. i ispunjena mu je {}. zelja".format(population[0].code[i][0], population[0].code[i][1], population[0].geneFitness(i)))
+    if population[0].geneFitness(i) == 0:
+        brPrvihZelja +=1
+    if population[0].geneFitness(i) > najgoraZelja:
+        najgoraZelja = population[0].geneFitness(i)
+    if population[0].geneFitness(i) not in ispunjeneZelje:
+        ispunjeneZelje[population[0].geneFitness(i)] = 1
+    else:
+        ispunjeneZelje[population[0].geneFitness(i)] +=1
+print("{}% studenata je ispunjena prva zelja".format((brPrvihZelja*100)/population[0].brStudenata))
+print("najgora ispunjena zelja se nalazi u prvih {}% zelja na listi".format((najgoraZelja*100)/population[0].brMentora))
 
-
-# In[10]:
-
-
-brStudenata = len(zeljeStudenata)
-brMentora = len(mentoriZauzetost)
-mentoriKapacitet = sum(mentoriZauzetost)
-
-
-# In[11]:
-
-
-get_ipython().system('pip install python-constraint')
-
-
-# In[12]:
-
-
-import constraint
-mapirajMentore = {}
-br=0
-for i in range(len(mentoriZauzetost)):
-    for j in range(mentoriZauzetost[i]):
-        
-        mapirajMentore[br] = i
-        br += 1
-
-
-# In[13]:
-
-
-problem = constraint.Problem()
-
-
-# In[14]:
-
-
-# npr niz[i]=j oznacava da je mentoru mapirajMentore[i] dodeljen j-ti student
-problem.addVariables(['mentor_{}'.format(i) for i in range(min(mentoriKapacitet, brStudenata))], range(brStudenata))
-problem.addConstraint(constraint.AllDifferentConstraint())
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-solutions = problem.getSolutions()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-min_val = brStudenata*brMentora
-najbolje_resenje = None
-
-for sol in range solutions:
-    val = 0
-    for example in sol:
-    
-        ment = int(example.strip('mentor_'))
-        print('student {} = {}'.format(sol[example], zeljeStudenata[int(sol[example])][mapirajMentore[ment]]))
-        val += zeljeStudenata[int(sol[example])][mapirajMentore[ment]]
-    if min_val>val:
-        min_val = val
-        najbolje_resenje = sol
-
-
-# In[ ]:
-
-
-print(val)
-
-
-# In[ ]:
-
-
-
+print(ispunjeneZelje)
 
