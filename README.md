@@ -1,4 +1,4 @@
-#Naziv projekta: DodeljivanjeMentoraStudentima
+# Naziv projekta: DodeljivanjeMentoraStudentima
 
 Kratak opis projekta:
   
