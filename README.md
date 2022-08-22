@@ -10,10 +10,12 @@ Autori:
   
   
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  # EN: Project: Allocation of mentors to students
+# EN: Project: Allocation of mentors to students
   
-  Brief description:
+Brief description:
   
   Mandatory project on a Computational intelligence course on Faculty of Mathematics, University of Belgrade. Using genetic algorithms with a tournament selection, we optimized a NP-hard problem(exponential asymptotic complexity) of allocating mentors to students based on their wish lists.
   
-  
+Authors:
+
+  Tadej Gojić 79/2018 i Teodora Vasić 1/2018
